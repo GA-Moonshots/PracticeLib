@@ -18,6 +18,11 @@ public class Libby extends CommandOpMode {
 
     @Override
     public void initialize() {
+        // TODO: we eventually want to add a second controller
+        //  for the arm and a button to switch bewteen field centric and robot centric steering
+        //  for this, however, we need to have the IMU and driver_2 control, we should do this
+        //  AFTER we confirm the robot is working normally
+
         // We initialize all of our hardware and controllers
         driver_1 = new GamepadEx(gamepad1);
 
@@ -33,7 +38,7 @@ public class Libby extends CommandOpMode {
         // We define our commands here
         // basic robot-centric movement command
         defaultDrive = new DefaultDrive(driveSubsystem,
-                driver_1.getLeftX(),
+                driver_1.getLeftX(), //this is kinda wierd and might be a source of errors
                 driver_1.getLeftY(),
                 driver_1.getRightX()
         );
