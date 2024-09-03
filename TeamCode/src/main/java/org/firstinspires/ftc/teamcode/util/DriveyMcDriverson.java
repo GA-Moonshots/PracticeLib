@@ -1,9 +1,10 @@
 package org.firstinspires.ftc.teamcode.util;
 
 import com.arcrobotics.ftclib.command.CommandOpMode;
+import com.arcrobotics.ftclib.command.Robot;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.Libby;
+import org.firstinspires.ftc.teamcode.LilPrince;
 
 @TeleOp(name="TeleOp - Primary")
 public class DriveyMcDriverson extends CommandOpMode {
@@ -18,7 +19,7 @@ public class DriveyMcDriverson extends CommandOpMode {
          all of our buttons are bound to commands and this class's parent, CommandOpMode, will
          continuously run any scheduled commands. We now slide into the WPILib style.
          */
-        Robot m_robot = new Libby(this);
+        Robot m_robot = new LilPrince(this);
     }
 
 }

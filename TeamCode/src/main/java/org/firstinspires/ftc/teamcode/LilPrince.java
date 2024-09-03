@@ -1,8 +1,11 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.arcrobotics.ftclib.command.Robot;
+import com.arcrobotics.ftclib.drivebase.MecanumDrive;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.Gamepad;
 
 public class LilPrince extends Robot {
 
@@ -10,9 +13,6 @@ public class LilPrince extends Robot {
     public LinearOpMode opMode;
     public GamepadEx player1;
     public GamepadEx player2;
-    public enum AprilTagToAlign {
-        LEFT, CENTER, RIGHT, NONE
-    }
 
     // SUBSYSTEMS
     public MecanumDrive drive;
@@ -27,10 +27,10 @@ public class LilPrince extends Robot {
         player2 = new GamepadEx(opMode.gamepad2);
         initTele();
     }
+
     // OVERLOADED CONSTRUCTOR THAT RESPONDS TO AUTONOMOUS OPMODE USER QUERY
     public LilPrince(LinearOpMode opMode, boolean isRed, boolean isLeft, boolean goForBoard) {
         this.opMode = opMode;
-        initAuto(isRed, isLeft, goForBoard);
     }
 
     /**
@@ -38,12 +38,15 @@ public class LilPrince extends Robot {
      */
     public void initTele() {
         // throw-away pose because we're not localizing anymore
-        drive = new MecanumDrive(this, new Pose2d(0,0,0));
+        drive = new MecanumDrive(
+                new Motor(hardwareMap, "frontLeft"),
+                new Motor(hardwareMap, "frontRight"),
+                new Motor(hardwareMap, "backLeft"),
+                new Motor(hardwareMap, "backRight")
+        );
+
         register(drive);
         drive.setDefaultCommand(new DriveCommand(this));
-        // start arm
-        arm = new Arm(this);
-        register(arm);
 
         /*
                 .__                                      ____
@@ -53,22 +56,6 @@ public class LilPrince extends Robot {
         |   __/ |____/(____  // ____| \___  >|__|        |___|
         |__|               \/ \/          \/
         */
-        Button aButtonP1 = new GamepadButton(player1, GamepadKeys.Button.A);
-        aButtonP1.whenPressed(new InstantCommand(() -> {
-            drive.toggleFieldCentric();
-        }));
-
-        Button bButtonP1 = new GamepadButton(player1, GamepadKeys.Button.B);
-        bButtonP1.whenPressed(new InstantCommand(() -> {
-            drive.resetFieldCentricTarget();
-        }));
-
-        Button xButtonP1 = new GamepadButton(player1, GamepadKeys.Button.X);
-        Button yButtonP1 = new GamepadButton(player1, GamepadKeys.Button.Y);
-        Button dPadUpP1 = new GamepadButton(player1, GamepadKeys.Button.DPAD_UP);
-        Button dPadDownP1 = new GamepadButton(player1, GamepadKeys.Button.DPAD_DOWN);
-        Button dPadLeftP1 = new GamepadButton(player1, GamepadKeys.Button.DPAD_LEFT);
-        Button dPadRightP1 = new GamepadButton(player1, GamepadKeys.Button.DPAD_RIGHT);
 
         /*
                 _                                    __
@@ -80,83 +67,5 @@ public class LilPrince extends Robot {
         | |                ( )_| |
         (_)                `\___/'
          */
-        Button aButtonP2 = new GamepadButton(player2, GamepadKeys.Button.A);
-        aButtonP2.whenPressed(new InstantCommand(() -> {
-            arm.travelMode();
-        }));
-
-        Button bButtonP2 = new GamepadButton(player2, GamepadKeys.Button.B);
-        bButtonP2.whenPressed(new InstantCommand(() -> {
-            arm.toggleOpen();
-        }));
-
-        Button xButtonP2 = new GamepadButton(player2, GamepadKeys.Button.X);
-        xButtonP2.whenHeld(new ArmMoveTo(this, ArmMoveTo.ArmPosition.GROUND));
-
-        Button yButtonP2 = new GamepadButton(player2, GamepadKeys.Button.Y);
-        yButtonP2.whenHeld(new ArmMoveTo(this, ArmMoveTo.ArmPosition.HIGH_DROP));
-
-        Button dPadUpP2 = new GamepadButton(player2, GamepadKeys.Button.DPAD_UP);
-        dPadUpP2.whileHeld(new InstantCommand(() -> {
-            arm.wristUp();
-        }));
-
-        Button dPadDownP2 = new GamepadButton(player2, GamepadKeys.Button.DPAD_DOWN);
-        dPadDownP2.whileHeld(new InstantCommand(() -> {
-            arm.wristDown();
-        }));
-
-        Button dPadLeftP2 = new GamepadButton(player2, GamepadKeys.Button.DPAD_LEFT);
-        dPadLeftP2.whileHeld(new InstantCommand(() -> {
-            arm.rollNegative();
-        }));
-
-        Button dPadRightP2 = new GamepadButton(player2, GamepadKeys.Button.DPAD_RIGHT);
-        dPadRightP2.whileHeld(new InstantCommand(() -> {
-            arm.rollPositive();
-        }));
-
-    }
-
-    /**
-     * Used given starting position and call the corresponding commands
-     */
-    public void initAuto(boolean isRed, boolean isLeft, boolean goForBoard) {
-        // TODO: Calculate pose for each of the four starting positions
-        Pose2d start;
-        // RED LEFT
-        if(isRed && isLeft)
-            start = new Pose2d(new Vector2d(0, 0), 0.0);
-            // RED RIGHT
-        else if(isRed)
-            start = new Pose2d(new Vector2d(0, 0), 0.0);
-            // BLUE LEFT
-        else if(isLeft)
-            start = new Pose2d(new Vector2d(0, 0), 0.0);
-            // BLUE RIGHT
-        else
-            start = new Pose2d(new Vector2d(0, 0), 0.0);
-
-        drive = new MecanumDrive(this, start);
-        register(drive);
-        arm = new Arm(this);
-        register(arm);
-
-
-        // locate prop, drop piece, withdraw and straighten out
-        new SequentialCommandGroup(
-                new ScanForProp(this,0,20, 4),
-                new TurnToProp(this, 1),
-                new InstantCommand(() -> {
-                    arm.openClaw();
-                    opMode.sleep(25);
-                    arm.travelMode();
-                }),
-                new StrafeByDistance(this, 0, -2, 0.5),
-                new RotateToZero(this, 2)
-        ).schedule();
-
-        // TODO: complete autonomous command sequence
-
     }
 }
