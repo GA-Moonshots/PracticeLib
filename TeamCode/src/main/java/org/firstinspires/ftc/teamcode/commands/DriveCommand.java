@@ -1,18 +1,24 @@
 package org.firstinspires.ftc.teamcode.commands;
 
 import com.arcrobotics.ftclib.command.CommandBase;
+import com.arcrobotics.ftclib.gamepad.GamepadEx;
 
-import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveSub;
+import org.firstinspires.ftc.teamcode.LilPrince;
+import org.firstinspires.ftc.teamcode.subsystems.Mecanum;
 
 public class DriveCommand extends CommandBase {
-    private final MecanumDriveSub mc_d;
+    private final Mecanum drive;
+    private GamepadEx player1;
 
-    private final double strafeSpeed;
-    private final double forwardSpeed;
-    private final double turnSpeed;
 
-    public DriveCommand(MecanumDriveSub driveSubsystem, double strafeSpeed, double forwardSpeed, double turnSpeed) {
-        this.mc_d = driveSubsystem;
+
+
+    private double strafeSpeed;
+    private double forwardSpeed;
+    private double turnSpeed;
+
+    public DriveCommand(Mecanum driveSubsystem, double strafeSpeed, double forwardSpeed, double turnSpeed) {
+        this.drive = driveSubsystem;
         this.strafeSpeed = strafeSpeed;
         this.forwardSpeed = forwardSpeed;
         this.turnSpeed = turnSpeed;
@@ -27,7 +33,12 @@ public class DriveCommand extends CommandBase {
 
     @Override
     public void execute() {
-        mc_d.driveRobot(strafeSpeed, forwardSpeed, turnSpeed);
+        // Check control input
+        strafeSpeed = player1.getLeftX();
+        forwardSpeed = player1.getLeftY();
+        turnSpeed = player1.getRightX();
+
+        drive.driveRobot(strafeSpeed, forwardSpeed, turnSpeed);
     }
 
     public boolean isFinished() {

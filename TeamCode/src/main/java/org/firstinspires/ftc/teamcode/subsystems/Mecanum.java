@@ -1,17 +1,21 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.arcrobotics.ftclib.command.CommandScheduler;
-import com.arcrobotics.ftclib.command.Robot;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.drivebase.MecanumDrive;
+import com.arcrobotics.ftclib.hardware.motors.Motor;
+import com.arcrobotics.ftclib.hardware.motors.MotorEx;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
-public class MecanumDriveSub extends SubsystemBase {
+import org.firstinspires.ftc.teamcode.LilPrince;
 
-    private final MecanumDrive drive;
+public class Mecanum extends SubsystemBase {
 
-    public MecanumDriveSub (MecanumDrive mecanumDrive) {
-        drive = mecanumDrive;
-    }
+    // SUBSYSTEM ASSETS
+    private final LilPrince m_robot;
+    // MOTORS
+    private final MotorEx leftFront, leftBack, rightFront, rightBack;
+    //TODO: we need to get this subsystem working and give it the tasks.
 
     // Our default drive system that is robot centric
     // We should add field centric once we implement IMU
@@ -19,9 +23,5 @@ public class MecanumDriveSub extends SubsystemBase {
         drive.driveRobotCentric(strafeSpeed, forwardSpeed, turnSpeed);
     }
 
-    @Override
-    public void periodic() {
-        super.periodic();
-        CommandScheduler.getInstance().run();
-    }
+
 }

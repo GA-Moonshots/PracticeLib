@@ -7,11 +7,17 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.LilPrince;
 
 
-@TeleOp(name="TeleOp - Primary")
+@TeleOp(name="TeleOp - Main")
 public class DriveyMcDriverson extends CommandOpMode {
 
     @Override
     public void initialize() {
+
+
+        boolean isWorking = true;
+        telemetry.addData("Is it working: ", isWorking);
+        telemetry.update();
+
         Robot m_robot = new LilPrince(this);
         /*
          We build our robot. From here on out, we don't need this file. When we build the robot,

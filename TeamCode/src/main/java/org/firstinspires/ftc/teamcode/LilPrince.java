@@ -5,9 +5,9 @@ import com.arcrobotics.ftclib.drivebase.MecanumDrive;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.Gamepad;
 
-import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveSub;
+import org.firstinspires.ftc.teamcode.commands.DriveCommand;
+import org.firstinspires.ftc.teamcode.subsystems.Mecanum;
 
 public class LilPrince extends Robot {
 
@@ -17,7 +17,10 @@ public class LilPrince extends Robot {
     public GamepadEx player2;
 
     // SUBSYSTEMS
-    public MecanumDriveSub drive;
+    public Mecanum drive;
+
+
+
 
     /**
      * Welcome to the Command pattern. Here we assemble the robot and kick-off the command
@@ -39,10 +42,24 @@ public class LilPrince extends Robot {
      * Set teleOp's default commands and player control bindings
      */
     public void initTele() {
-        drive = new MecanumDriveSub(new MecanumDrive(new Motor(opMode.hardwareMap, "frontLeft"),
+
+        drive = new Mecanum(new MecanumDrive(new Motor(opMode.hardwareMap, "frontLeft"),
                 new Motor(opMode.hardwareMap, "frontRight"),
                 new Motor(opMode.hardwareMap, "backLeft"),
                 new Motor(opMode.hardwareMap, "backRight")));
+        opMode.telemetry.addData("Mecanum Check:", true);
+        opMode.telemetry.update();
+        register(drive);
+
+        drive.setDefaultCommand(new DriveCommand(drive,
+                player1.getLeftX(), //this is kinda wierd and might be a source of errors
+                player1.getLeftY(),
+                player1.getRightX()
+                ));
+
+        opMode.telemetry.addData("Command Check:", true);
+        opMode.telemetry.update();
+
 
 
 
