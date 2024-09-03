@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.arcrobotics.ftclib.command.CommandBase;
 
@@ -21,8 +21,15 @@ public class DefaultDrive extends CommandBase {
     // this for know is not taking robt centric vs field centric into consideration
     // so we might need to rethink this
     @Override
+    public void initialize(){}
+
+    @Override
     public void execute() {
         driveSubsystem.driveRobot(strafeSpeed, forwardSpeed, turnSpeed);
     }
 
+    public boolean isFinished() {
+        // currently just a placeholder
+        return false;
+    }
 }
