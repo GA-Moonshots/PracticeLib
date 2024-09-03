@@ -7,6 +7,8 @@ import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
+import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveSub;
+
 public class LilPrince extends Robot {
 
     // INSTANCE VARIABLES
@@ -15,7 +17,7 @@ public class LilPrince extends Robot {
     public GamepadEx player2;
 
     // SUBSYSTEMS
-    public MecanumDrive drive;
+    public MecanumDriveSub drive;
 
     /**
      * Welcome to the Command pattern. Here we assemble the robot and kick-off the command
@@ -29,24 +31,20 @@ public class LilPrince extends Robot {
     }
 
     // OVERLOADED CONSTRUCTOR THAT RESPONDS TO AUTONOMOUS OPMODE USER QUERY
-    public LilPrince(LinearOpMode opMode, boolean isRed, boolean isLeft, boolean goForBoard) {
-        this.opMode = opMode;
-    }
+//    public LilPrince(LinearOpMode opMode, boolean isRed, boolean isLeft, boolean goForBoard) {
+//        this.opMode = opMode;
+//    }
 
     /**
      * Set teleOp's default commands and player control bindings
      */
     public void initTele() {
-        // throw-away pose because we're not localizing anymore
-        drive = new MecanumDrive(
-                new Motor(hardwareMap, "frontLeft"),
-                new Motor(hardwareMap, "frontRight"),
-                new Motor(hardwareMap, "backLeft"),
-                new Motor(hardwareMap, "backRight")
-        );
+        drive = new MecanumDriveSub(new MecanumDrive(new Motor(opMode.hardwareMap, "frontLeft"),
+                new Motor(opMode.hardwareMap, "frontRight"),
+                new Motor(opMode.hardwareMap, "backLeft"),
+                new Motor(opMode.hardwareMap, "backRight")));
 
-        register(drive);
-        drive.setDefaultCommand(new DriveCommand(this));
+
 
         /*
                 .__                                      ____
@@ -68,4 +66,6 @@ public class LilPrince extends Robot {
         (_)                `\___/'
          */
     }
+
+
 }
