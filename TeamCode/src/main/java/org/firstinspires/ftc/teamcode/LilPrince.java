@@ -1,12 +1,16 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.Robot;
+import com.arcrobotics.ftclib.command.button.Button;
+import com.arcrobotics.ftclib.command.button.GamepadButton;
 import com.arcrobotics.ftclib.drivebase.MecanumDrive;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.commands.DriveCommand;
+import org.firstinspires.ftc.teamcode.commands.Drive;
 import org.firstinspires.ftc.teamcode.subsystems.Mecanum;
 
 public class LilPrince extends Robot {
@@ -17,7 +21,7 @@ public class LilPrince extends Robot {
     public GamepadEx player2;
 
     // SUBSYSTEMS
-    public Mecanum drive;
+    public Mecanum mecanum;
 
 
 
@@ -43,24 +47,10 @@ public class LilPrince extends Robot {
      */
     public void initTele() {
 
-        drive = new Mecanum(new MecanumDrive(new Motor(opMode.hardwareMap, "frontLeft"),
-                new Motor(opMode.hardwareMap, "frontRight"),
-                new Motor(opMode.hardwareMap, "backLeft"),
-                new Motor(opMode.hardwareMap, "backRight")));
-        opMode.telemetry.addData("Mecanum Check:", true);
-        opMode.telemetry.update();
-        register(drive);
-
-        drive.setDefaultCommand(new DriveCommand(drive,
-                player1.getLeftX(), //this is kinda wierd and might be a source of errors
-                player1.getLeftY(),
-                player1.getRightX()
-                ));
-
-        opMode.telemetry.addData("Command Check:", true);
-        opMode.telemetry.update();
-
-
+        // MECANUM SETUP
+        mecanum = new Mecanum(this);
+        register(mecanum);
+        mecanum.setDefaultCommand(new Drive(this));
 
 
         /*
@@ -71,6 +61,22 @@ public class LilPrince extends Robot {
         |   __/ |____/(____  // ____| \___  >|__|        |___|
         |__|               \/ \/          \/
         */
+        Button aButtonP1 = new GamepadButton(player1, GamepadKeys.Button.A);
+        aButtonP1.whenPressed(new InstantCommand(() -> {
+            mecanum.toggleFieldCentric();
+        }));
+
+        Button bButtonP1 = new GamepadButton(player1, GamepadKeys.Button.B);
+        bButtonP1.whenPressed(new InstantCommand(() -> {
+            mecanum.resetFieldCentricTarget();
+        }));
+
+        Button xButtonP1 = new GamepadButton(player1, GamepadKeys.Button.X);
+        Button yButtonP1 = new GamepadButton(player1, GamepadKeys.Button.Y);
+        Button dPadUpP1 = new GamepadButton(player1, GamepadKeys.Button.DPAD_UP);
+        Button dPadDownP1 = new GamepadButton(player1, GamepadKeys.Button.DPAD_DOWN);
+        Button dPadLeftP1 = new GamepadButton(player1, GamepadKeys.Button.DPAD_LEFT);
+        Button dPadRightP1 = new GamepadButton(player1, GamepadKeys.Button.DPAD_RIGHT);
 
         /*
                 _                                    __
