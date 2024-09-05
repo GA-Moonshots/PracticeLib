@@ -12,9 +12,6 @@ public class Drive extends CommandBase {
     private GamepadEx player1;
     private LilPrince robot;
 
-
-
-
     private double strafeSpeed;
     private double forwardSpeed;
     private double turnSpeed;
@@ -39,12 +36,14 @@ public class Drive extends CommandBase {
         // you can go digging for the opMode controller
         double speedMod = robot.opMode.gamepad1.right_bumper ? 0.2 : 1; // slow mode
 
-        double forward = -applyDeadZone(player1.getLeftY());
+        double forward = applyDeadZone(player1.getLeftY());
         double strafe = applyDeadZone(player1.getLeftX());
         double turn = applyDeadZone(player1.getRightX());
 
         // Drive the robot with adjusted inputs:
         mecanum.drive(forward * speedMod, strafe * speedMod, turn * speedMod);
+
+
 
     }
 

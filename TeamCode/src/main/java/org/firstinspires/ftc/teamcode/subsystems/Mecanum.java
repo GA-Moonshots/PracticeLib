@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.arcrobotics.ftclib.command.SubsystemBase;
+import com.arcrobotics.ftclib.drivebase.MecanumDrive;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.Range;
@@ -13,6 +14,7 @@ import org.firstinspires.ftc.teamcode.LilPrince;
 import org.firstinspires.ftc.teamcode.util.HardwareNames;
 
 public class Mecanum extends SubsystemBase {
+    private MecanumDrive mecanumDrive;
 
     // SUBSYSTEM ASSETS
     private final LilPrince robot;
@@ -34,15 +36,22 @@ public class Mecanum extends SubsystemBase {
         this.robot = robot;
 
         // init our motors
-        leftFront = this.robot.opMode.hardwareMap.get(MotorEx.class, HardwareNames.LEFT_FRONT_NAME);
-        leftBack = this.robot.opMode.hardwareMap.get(MotorEx.class, HardwareNames.LEFT_BACK_NAME);
-        rightBack = this.robot.opMode.hardwareMap.get(MotorEx.class, HardwareNames.RIGHT_BACK_NAME);
-        rightFront = this.robot.opMode.hardwareMap.get(MotorEx.class, HardwareNames.RIGHT_FRONT_NAME);
+//        leftFront = this.robot.opMode.hardwareMap.get(MotorEx.class, HardwareNames.LEFT_FRONT_NAME);
+//        leftBack = this.robot.opMode.hardwareMap.get(MotorEx.class, HardwareNames.LEFT_BACK_NAME);
+//        rightBack = this.robot.opMode.hardwareMap.get(MotorEx.class, HardwareNames.RIGHT_BACK_NAME);
+//        rightFront = this.robot.opMode.hardwareMap.get(MotorEx.class, HardwareNames.RIGHT_FRONT_NAME);
 
-        leftFront.setZeroPowerBehavior(MotorEx.ZeroPowerBehavior.BRAKE);
-        leftBack.setZeroPowerBehavior(MotorEx.ZeroPowerBehavior.BRAKE);
-        rightBack.setZeroPowerBehavior(MotorEx.ZeroPowerBehavior.BRAKE);
-        rightFront.setZeroPowerBehavior(MotorEx.ZeroPowerBehavior.BRAKE);
+        leftFront = new MotorEx(this.robot.opMode.hardwareMap, HardwareNames.LEFT_FRONT_NAME);
+        leftBack = new MotorEx(this.robot.opMode.hardwareMap, HardwareNames.LEFT_BACK_NAME);
+        rightFront = new MotorEx(this.robot.opMode.hardwareMap, HardwareNames.RIGHT_FRONT_NAME);
+        rightBack = new MotorEx(this.robot.opMode.hardwareMap, HardwareNames.RIGHT_BACK_NAME);
+
+//        leftFront.setZeroPowerBehavior(MotorEx.ZeroPowerBehavior.BRAKE);
+//        leftBack.setZeroPowerBehavior(MotorEx.ZeroPowerBehavior.BRAKE);
+//        rightBack.setZeroPowerBehavior(MotorEx.ZeroPowerBehavior.BRAKE);
+//        rightFront.setZeroPowerBehavior(MotorEx.ZeroPowerBehavior.BRAKE);
+
+        mecanumDrive = new MecanumDrive(leftFront, rightFront, leftBack, rightBack);
 
         // TODO: instantiate distance sensors
 
@@ -65,10 +74,12 @@ public class Mecanum extends SubsystemBase {
             // https://www.geogebra.org/m/fmegkksm
             double diff = fieldCentricTarget - getZAngle();
             double temp = forward;
-            forward = forward * Math.cos(Math.toRadians(diff)) - strafe * Math.sin(Math.toRadians(diff));
-            strafe = temp * Math.sin(Math.toRadians(diff)) + strafe * Math.cos(Math.toRadians(diff));
-            if(telemetry != null)
+            forward = forward * Math.cos(Math.toRadians(diff)) + strafe * Math.sin(Math.toRadians(diff));
+            strafe = (-temp * Math.sin(Math.toRadians(diff)) + strafe * Math.cos(Math.toRadians(diff)));
+            if(telemetry != null) {
                 telemetry.addData("Mode", "Field Centric");
+                telemetry.update();
+            }
         } else if(telemetry != null)
             telemetry.addData("Mode", "Robot Centric");
 
@@ -84,10 +95,10 @@ public class Mecanum extends SubsystemBase {
         // Meaning forward is reversed
         // The boost values should match the turn
         // Since the drive is a diamond wheel pattern instead of an X, it reverses the strafe.
-        double leftFrontPower = -forward +strafe + turn;
-        double rightFrontPower = forward + strafe + turn;
-        double leftBackPower = -forward - strafe + turn;
-        double rightBackPower = forward - strafe + turn;
+        double leftFrontPower =  -forward - strafe - turn;
+        double rightFrontPower = -forward + strafe + turn;
+        double leftBackPower = forward - strafe + turn;
+        double rightBackPower = -forward - strafe + turn;
 
         if(telemetry != null)
             telemetry.addData("Motors", "(%.2f, %.2f, %.2f, %.2f)",
@@ -99,6 +110,7 @@ public class Mecanum extends SubsystemBase {
                 leftBackPower,
                 rightBackPower
         );
+        //mecanumDrive.driveRobotCentric(strafe, forward, turn);
     }
 
 
