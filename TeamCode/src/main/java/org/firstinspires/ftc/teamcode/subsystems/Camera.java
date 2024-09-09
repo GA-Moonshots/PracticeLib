@@ -24,6 +24,8 @@ public class Camera extends SubsystemBase {
         camera = OpenCvCameraFactory.getInstance().createWebcam(webcamName, cameraMonitorViewId);;
 
         camera.setPipeline(new AprilTag2dPipeline());
+
+        this.open();
     }
 
     public void open() {
