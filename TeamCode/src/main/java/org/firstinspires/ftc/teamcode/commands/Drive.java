@@ -42,9 +42,6 @@ public class Drive extends CommandBase {
 
         // Drive the robot with adjusted inputs:
         mecanum.drive(forward * speedMod, strafe * speedMod, turn * speedMod);
-
-
-
     }
 
 

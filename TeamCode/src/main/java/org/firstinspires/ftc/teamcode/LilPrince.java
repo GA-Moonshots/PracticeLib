@@ -2,15 +2,18 @@ package org.firstinspires.ftc.teamcode;
 
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.Robot;
+import com.arcrobotics.ftclib.command.RunCommand;
 import com.arcrobotics.ftclib.command.button.Button;
 import com.arcrobotics.ftclib.command.button.GamepadButton;
 import com.arcrobotics.ftclib.drivebase.MecanumDrive;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
+import com.arcrobotics.ftclib.vision.UGRectDetector;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.commands.Drive;
+import org.firstinspires.ftc.teamcode.subsystems.Camera;
 import org.firstinspires.ftc.teamcode.subsystems.Mecanum;
 
 public class LilPrince extends Robot {
@@ -22,9 +25,7 @@ public class LilPrince extends Robot {
 
     // SUBSYSTEMS
     public Mecanum mecanum;
-
-
-
+    public Camera camera;
 
     /**
      * Welcome to the Command pattern. Here we assemble the robot and kick-off the command
@@ -49,9 +50,13 @@ public class LilPrince extends Robot {
 
         // MECANUM SETUP
         mecanum = new Mecanum(this);
-        register(mecanum);
         mecanum.setDefaultCommand(new Drive(this));
 
+        // CAMERA SET UP
+        camera = new Camera(this);
+
+        // Register subsystems
+        register(camera, mecanum);
 
         /*
                 .__                                      ____
