@@ -1,35 +1,37 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.vision.AprilTag2dPipeline;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.LilPrince;
+import org.firstinspires.ftc.teamcode.util.HardwareNames;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
-import org.openftc.easyopencv.OpenCvPipeline;
 
 public class Camera {
     private LilPrince m_robot;
-
-    public OpenCvCamera camera;
+    private OpenCvCamera camera;
 
     public Camera (LilPrince robot, Telemetry telemetry) {
         telemetry.addData("Camera Working", true);
         telemetry.update();
 
+        // We instantiate the robot
         m_robot = robot;
 
-        int cameraMonitorViewId = m_robot.opMode.hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", m_robot.opMode.hardwareMap.appContext.getPackageName());
+        // Camera Instantiation procedures
+        int cameraMonitorViewId = m_robot.opMode.hardwareMap.appContext.getResources().
+                getIdentifier("cameraMonitorViewId", "id",
+                        m_robot.opMode.hardwareMap.appContext.getPackageName());
 
-        // Replace magic string w/hardware name file
-        WebcamName webcamName = m_robot.opMode.hardwareMap.get(WebcamName.class, "Webcam 1");
+        WebcamName webcamName = m_robot.opMode.hardwareMap.get(WebcamName.class, HardwareNames.WEBCAM_NAME);
         camera = OpenCvCameraFactory.getInstance().createWebcam(webcamName, cameraMonitorViewId);;
 
         camera.setPipeline(new AprilTag2dPipeline());
 
+        // Opening the camera
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
         {
             @Override
