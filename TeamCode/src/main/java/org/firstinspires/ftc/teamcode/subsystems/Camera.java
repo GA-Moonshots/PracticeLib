@@ -3,18 +3,23 @@ package org.firstinspires.ftc.teamcode.subsystems;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.vision.AprilTag2dPipeline;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.LilPrince;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
+import org.openftc.easyopencv.OpenCvPipeline;
 
-public class Camera extends SubsystemBase {
+public class Camera {
     private LilPrince m_robot;
 
     public OpenCvCamera camera;
 
-    public Camera (LilPrince robot) {
+    public Camera (LilPrince robot, Telemetry telemetry) {
+        telemetry.addData("Camera Working", true);
+        telemetry.update();
+
         m_robot = robot;
 
         int cameraMonitorViewId = m_robot.opMode.hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", m_robot.opMode.hardwareMap.appContext.getPackageName());
@@ -25,10 +30,6 @@ public class Camera extends SubsystemBase {
 
         camera.setPipeline(new AprilTag2dPipeline());
 
-        this.open();
-    }
-
-    public void open() {
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
         {
             @Override

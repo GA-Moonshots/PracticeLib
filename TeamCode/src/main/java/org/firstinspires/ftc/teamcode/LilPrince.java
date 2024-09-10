@@ -52,11 +52,8 @@ public class LilPrince extends Robot {
         mecanum = new Mecanum(this);
         mecanum.setDefaultCommand(new Drive(this));
 
-        // CAMERA SET UP
-        camera = new Camera(this);
-
         // Register subsystems
-        register(camera, mecanum);
+        register(mecanum);
 
         /*
                 .__                                      ____

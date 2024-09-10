@@ -12,8 +12,6 @@ public class DriveyMcDriverson extends CommandOpMode {
 
     @Override
     public void initialize() {
-
-
         boolean isWorking = true;
         telemetry.addData("Is it working: ", isWorking);
         telemetry.update();

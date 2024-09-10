@@ -31,25 +31,21 @@ public class Mecanum extends SubsystemBase {
     // MOTORS
     private final MotorEx leftFront, leftBack, rightFront, rightBack;
 
+    // CAMERA
+    Camera camera;
+
     public Mecanum(LilPrince robot){
         // convenient references
         this.robot = robot;
 
-        // init our motors
-//        leftFront = this.robot.opMode.hardwareMap.get(MotorEx.class, HardwareNames.LEFT_FRONT_NAME);
-//        leftBack = this.robot.opMode.hardwareMap.get(MotorEx.class, HardwareNames.LEFT_BACK_NAME);
-//        rightBack = this.robot.opMode.hardwareMap.get(MotorEx.class, HardwareNames.RIGHT_BACK_NAME);
-//        rightFront = this.robot.opMode.hardwareMap.get(MotorEx.class, HardwareNames.RIGHT_FRONT_NAME);
+        // init our camera
+        camera = new Camera(this.robot, this.robot.opMode.telemetry);
 
+        // init our motors
         leftFront = new MotorEx(this.robot.opMode.hardwareMap, HardwareNames.LEFT_FRONT_NAME);
         leftBack = new MotorEx(this.robot.opMode.hardwareMap, HardwareNames.LEFT_BACK_NAME);
         rightFront = new MotorEx(this.robot.opMode.hardwareMap, HardwareNames.RIGHT_FRONT_NAME);
         rightBack = new MotorEx(this.robot.opMode.hardwareMap, HardwareNames.RIGHT_BACK_NAME);
-
-//        leftFront.setZeroPowerBehavior(MotorEx.ZeroPowerBehavior.BRAKE);
-//        leftBack.setZeroPowerBehavior(MotorEx.ZeroPowerBehavior.BRAKE);
-//        rightBack.setZeroPowerBehavior(MotorEx.ZeroPowerBehavior.BRAKE);
-//        rightFront.setZeroPowerBehavior(MotorEx.ZeroPowerBehavior.BRAKE);
 
         mecanumDrive = new MecanumDrive(leftFront, rightFront, leftBack, rightBack);
 
@@ -57,8 +53,6 @@ public class Mecanum extends SubsystemBase {
 
         imu = this.robot.opMode.hardwareMap.get(IMU.class, HardwareNames.IMU_NAME);
         this.resetFieldCentricTarget();
-
-
     }
 
     /**
