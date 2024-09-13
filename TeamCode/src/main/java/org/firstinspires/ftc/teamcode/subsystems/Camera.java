@@ -9,8 +9,13 @@ import org.firstinspires.ftc.teamcode.util.HardwareNames;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
+import com.acmerobotics.dashboard.FtcDashboard;
 
 public class Camera {
+    // Instance variables
+    private boolean isAprilTag = true;
+
+    // Hardware
     private LilPrince m_robot;
     private OpenCvCamera camera;
 
@@ -29,7 +34,14 @@ public class Camera {
         WebcamName webcamName = m_robot.opMode.hardwareMap.get(WebcamName.class, HardwareNames.WEBCAM_NAME);
         camera = OpenCvCameraFactory.getInstance().createWebcam(webcamName, cameraMonitorViewId);;
 
-        camera.setPipeline(new AprilTag2dPipeline());
+        // FTC Dashboard Camera Set up stuff
+        FtcDashboard.getInstance().startCameraStream(camera, 60);
+
+        // Checks which pipeline we will use
+        if(isAprilTag) {
+            //Setting our pipeline to the camera
+            camera.setPipeline(new AprilTag2dPipeline());
+        }
 
         // Opening the camera
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
@@ -48,5 +60,10 @@ public class Camera {
                  */
             }
         });
+    }
+
+    // Method to determine which pipeline we will use
+    public void AprilTagPipelineSelected(boolean state) {
+        isAprilTag = state;
     }
 }
