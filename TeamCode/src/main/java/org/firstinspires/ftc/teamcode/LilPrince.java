@@ -25,7 +25,6 @@ public class LilPrince extends Robot {
 
     // SUBSYSTEMS
     public Mecanum mecanum;
-    public Camera camera;
 
     /**
      * Welcome to the Command pattern. Here we assemble the robot and kick-off the command
@@ -50,10 +49,15 @@ public class LilPrince extends Robot {
 
         // MECANUM SETUP
         mecanum = new Mecanum(this);
-        mecanum.setDefaultCommand(new Drive(this));
 
         // Register subsystems
+        // REGISTER THE SUBSYSTEM BEFORE THE DEFAULT COMMANDS
         register(mecanum);
+
+        // Setting Default Commands
+        mecanum.setDefaultCommand(new Drive(this));
+
+
 
         /*
                 .__                                      ____
